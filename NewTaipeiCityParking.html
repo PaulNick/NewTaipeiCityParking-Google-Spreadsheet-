@@ -1,0 +1,246 @@
+<html>
+<title>新北市停車位在那兒?</title>
+<head>
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+<meta HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=big5">
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script>
+	  var now_year="";
+	  var now_month="";
+	  var now_date="";
+
+	function showlocation(value)
+	{
+		$("#parkspace tbody").remove();
+		var empty="<tbody></tbody>";
+		$(empty).appendTo("#parkspace");
+		var tblRow1 ="";
+		$(function(){
+			
+			var ID = [];
+			var AREA = [];
+			var NAME = [];
+			var TYPE = [];
+			var SUMMARY = [];
+			var ADDRESS = [];
+			var ADDRESS = [];
+			var TEL = [];
+			var PAYEX = [];
+			var SERVICETIME = [];
+			var TW97X = [];
+			var TW97Y = [];
+			var TOTALCAR = [];
+			var TOTALMOTOR = [];
+			var TOTALBIKE = [];
+			var AVAILABLECAR = [];
+
+			$.getJSON('https://spreadsheets.google.com/feeds/list/1b8ZD2TzpjTHCiuZUdONCdCW02oJi-1-7UnlGS06T93k/od6/public/values?alt=json', function (data){
+				for (var i=0; i < data.feed.entry.length; i++){
+					ID[i] = data.feed.entry[i].gsx$id.$t;
+					AREA[i] = data.feed.entry[i].gsx$area.$t;
+					NAME[i] = data.feed.entry[i].gsx$name.$t;
+					TYPE[i] = data.feed.entry[i].gsx$type.$t;
+					SUMMARY[i] = data.feed.entry[i].gsx$summary.$t;
+					ADDRESS[i] = data.feed.entry[i].gsx$address.$t;
+					TEL[i] = data.feed.entry[i].gsx$tel.$t;
+					if(TEL[i].substr(0,3) =="800")
+					{
+						TEL[i] ="0"+TEL[i];
+					}
+					if (TEL[i].length =9 && TEL[i].substr(0,1) == "9")
+					{
+						TEL[i] ="0"+TEL[i];
+					}
+					PAYEX[i] = data.feed.entry[i].gsx$payex.$t;
+					SERVICETIME[i] = data.feed.entry[i].gsx$servicetime.$t;
+					TW97X[i] = data.feed.entry[i].gsx$tw97x.$t;
+					TW97Y[i] = data.feed.entry[i].gsx$tw97y.$t;
+					TOTALCAR[i] = data.feed.entry[i].gsx$totalcar.$t;
+					TOTALMOTOR[i] = data.feed.entry[i].gsx$totalmotor.$t;
+					TOTALBIKE[i] = data.feed.entry[i].gsx$totalbike.$t;
+					AVAILABLECAR[i] = data.feed.entry[i].gsx$availablecar.$t;
+					
+					if(AREA[i] == value)
+					{
+						tblRow1 ="<tr>" + 
+						"<td>" + NAME[i] + "</td>" +	
+						"<td>" + TOTALCAR[i] + "</td>" +	
+						"<td>" + AVAILABLECAR[i] + "</td>" +
+						"<td>" + SERVICETIME[i] + "</td>" +	
+						"<td>" + ADDRESS[i] + "</td>" +	
+						"<td>" + TEL[i] + "</td>" + 	
+						"<td>" + PAYEX[i] + "</td>" +						
+						//"<td>" + TYPE[i] + "</td>" + 
+						//"<td>" + SUMMARY[i] + "</td>" +
+						//"<td>" + ID[i] + "</td>" + 
+						//"<td>" + AREA[i] + "</td>" +	
+						//"<td>" + TW97X[i] + "</td>" + 
+						//"<td>" + TW97Y[i] + "</td>" +
+						//"<td>" + TOTALMOTOR[i] + "</td>" + 
+						//"<td>" + TOTALBIKE[i] + "</td>" +									
+						"</tr>";
+						$(tblRow1).appendTo("#parkspace tbody");
+					}
+				}
+			});
+			
+
+
+		});
+
+	}
+	
+	function ShowTime(){
+	　var NowDate=new Date();
+	  var year = NowDate.getFullYear();
+	  var month = NowDate.getMonth()+1;
+	  var date = NowDate.getDate();
+	　var hours=NowDate.getHours();
+	  now_year=year;
+	  now_month=month;
+	  now_date=date;
+	　var minutes=NowDate.getMinutes();
+	　var seconds=NowDate.getSeconds();　
+	　document.getElementById('showbox').innerHTML = '現在時間:'+year+'年'+month+'月'+date+'日'+hours+'時'+minutes+'分'+seconds+'秒';
+	　setTimeout('ShowTime()',1000);
+	}
+</script>
+</head>
+<body onload="ShowTime()">
+<div class="wrapper">
+<div class="profile">
+  <div id="showbox"></div>
+  <br>
+  <table border="0">
+	  <tr>
+			<table id= "parkspace" border="2">
+				<thead>
+						<th>停車場名稱</th>
+						<th>總車位數</th>
+						<th>剩餘車位數</th>
+						<th>營業時間</th>
+						<th>地址</th>
+						<th>電話</th>
+						<th>收費方式</th>
+						<!--<th>車場概況</th>-->
+						<!--<th>停車場的編號</th>-->
+						<!--<th>行政區</th>-->
+						<!--<th>X座標值</th>-->
+						<!--<th>Y座標值</th>-->
+						<!--<th>停車場（機車）總車位數</th>-->
+						<!--<th>停車場（腳踏車）總車位數</th>-->
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+			<br>
+	  </tr>
+
+	  <tr>
+	        <table border="0">
+			<tr>
+				<th>
+					<button type="button" value="八里區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">八里區</button>
+				</th>
+				<th>
+					<button type="button" value="三芝區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">三芝區</button>
+				</th>
+				<th>
+					<button type="button" value="三重區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">三重區</button>
+				</th>
+				<th>
+					<button type="button" value="三峽區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">三峽區</button>
+				</th>
+				<th>
+					<button type="button" value="土城區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">土城區</button>
+				</th>
+				<th>
+					<button type="button" value="中和區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">中和區</button>
+				</th>
+			</tr>
+			<tr>
+				<th>
+					<button type="button" value="五股區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">五股區</button>
+				</th>
+				<th>
+					<button type="button" value="平溪區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">平溪區</button>
+				</th>
+				<th>
+					<button type="button" value="永和區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">永和區</button>
+				</th>
+				<th>
+					<button type="button" value="石門區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">石門區</button>
+				</th>
+				<th>
+					<button type="button" value="石碇區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">石碇區</button>
+				</th>
+				<th>
+					<button type="button" value="汐止區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">汐止區</button>
+				</th>
+			</tr>
+			<tr>
+				<th>
+					<button type="button" value="坪林區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">坪林區</button>
+				</th>
+				<th>
+					<button type="button" value="林口區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">林口區</button>
+				</th>
+				<th>
+					<button type="button" value="板橋區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">板橋區</button>
+				</th>
+				<th>
+					<button type="button" value="金山區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">金山區</button>
+				</th>
+				<th>
+					<button type="button" value="泰山區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">泰山區</button>
+				</th>
+				<th>
+					<button type="button" value="烏來區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">烏來區</button>
+				</th>
+			</tr>
+			<tr>
+				<th>
+					<button type="button" value="貢寮區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">貢寮區</button>
+				</th>
+				<th>
+					<button type="button" value="淡水區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">淡水區</button>
+				</th>
+				<th>
+					<button type="button" value="深坑區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">深坑區</button>
+				</th>
+				<th>
+					<button type="button" value="新店區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">新店區</button>
+				</th>
+				<th>
+					<button type="button" value="新莊區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">新莊區</button>
+				</th>
+				<th>
+					<button type="button" value="瑞芳區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">瑞芳區</button>
+				</th>
+			</tr>
+			<tr>
+				<th>
+					<button type="button" value="萬里區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">萬里區</button>
+				</th>
+				<th>
+					<button type="button" value="樹林區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">樹林區</button>
+				</th>
+				<th>
+					<button type="button" value="雙溪區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">雙溪區</button>
+				</th>
+				<th>
+					<button type="button" value="蘆洲區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">蘆洲區</button>
+				</th>
+				<th>
+					<button type="button" value="鶯歌區" onclick="showlocation(this.value);" style="background-color:blue;color:white;border:5px #cccccc solid;">鶯歌區</button>
+				</th>
+			</tr>
+			</table>
+	  </tr>
+   </table>
+</div>
+</div>
+</body>
+</html>
